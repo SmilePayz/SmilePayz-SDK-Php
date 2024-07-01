@@ -60,9 +60,8 @@ $payinReq = array(
 $jsonString = json_encode($payinReq);
 echo "jsonString=" . $jsonString . PHP_EOL;
 
-$referenceId = time();
 //build
-$stringToSign = $referenceId . "|" . $timestamp . "|" . $merchanteCode . "|" . $jsonString;
+$stringToSign =  $timestamp . "|" . $merchanteCode . "|" . $jsonString;
 echo "stringToSign=" . $stringToSign . PHP_EOL;
 
 
@@ -92,7 +91,6 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',
     'X-TIMESTAMP: ' . $timestamp,
     'X-SIGNATURE: ' . $signatureValue,
-    'REFERENCE-ID: ' . $referenceId,
     'X-PARTNER-ID: ' . $merchanteId,
 ));
 

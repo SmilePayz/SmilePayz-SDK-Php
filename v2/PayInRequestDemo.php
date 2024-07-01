@@ -56,9 +56,8 @@ $signUtils = new Signature();
 $jsonString = $signUtils->minify($payinReq);
 echo "jsonString=" . $jsonString . PHP_EOL;
 
-$referenceId = time();
 //build
-$stringToSign = $referenceId . "|" . $timestamp . "|" . $merchanteCode . "|" . $jsonString;
+$stringToSign =  $timestamp . "|" . $merchanteCode . "|" . $jsonString;
 echo "stringToSign=" . $stringToSign . PHP_EOL;
 
 //********** begin signature ***************
@@ -82,7 +81,6 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',
     'X-TIMESTAMP: ' . $timestamp,
     'X-SIGNATURE: ' . $signatureValue,
-    'REFERENCE-ID: ' . $referenceId,
     'X-PARTNER-ID: ' . $merchanteId,
 ));
 
