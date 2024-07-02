@@ -16,11 +16,11 @@ $timestamp = $currentTime->format('Y-m-d\TH:i:sP');
 echo "timestamp=" . $timestamp . PHP_EOL;
 
 //get merchantId from merchant platform
-$merchanteId = "20019";
-$merchanteIdsandbox = "sandbox-20019";
+$merchantId = "20019";
+$merchantIdSandbox = "sandbox-20019";
 
-$merchanteCode = "95b57c46b8c2e068982be23fb669a80612cad68e6ce6ba4f5af9ec20d23bb274";
-$merchanteCodeSandbox = "6a58a603e5043290f4097ee4a7745661b3656932d4eebc3106b5dddc3af6e053";
+$merchantSecret = "95b57c46b8c2e068982be23fb669a80612cad68e6ce6ba4f5af9ec20d23bb274";
+$merchantSecretSandbox = "6a58a603e5043290f4097ee4a7745661b3656932d4eebc3106b5dddc3af6e053";
 
 //generate parameter $inquiryOrderStatusReq
 $inquiryOrderStatusReq = array(
@@ -35,7 +35,7 @@ $jsonString = $signUtils->minify($inquiryOrderStatusReq);
 echo "jsonString=" . $jsonString . PHP_EOL;
 
 //build
-$stringToSign =  $timestamp . "|" . $merchanteCode . "|" . $jsonString;
+$stringToSign =  $timestamp . "|" . $merchantSecret . "|" . $jsonString;
 echo "stringToSign=" . $stringToSign . PHP_EOL;
 
 //********** begin signature ***************
@@ -59,7 +59,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',
     'X-TIMESTAMP: ' . $timestamp,
     'X-SIGNATURE: ' . $signatureValue,
-    'X-PARTNER-ID: ' . $merchanteId,
+    'X-PARTNER-ID: ' . $merchantId,
 ));
 
 // Execute the request and get the response
