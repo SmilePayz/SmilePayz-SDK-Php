@@ -35,8 +35,8 @@ const PAY_OUT_API = "/v2.0/disbursement/cash-out";
 const CONTENT_TYPE = "application/json";
 
 
-const BASE_URL= 'https://gateway-test.smilepayz.com';
-const BASE_URL_SANDBOX='https://sandbox-gateway-test.smilepayz.com';
+const BASE_URL= 'https://gateway.smilepayz.com';
+const BASE_URL_SANDBOX='https://sandbox-gateway.smilepayz.com';
 const MERCHANT_ID='20019';
 const MERCHANT_ID_SANDBOX='sandbox-20019';
 const MERCHANT_SECRET='95b57c46b8c2e068982be23fb669a80612cad68e6ce6ba4f5af9ec20d23bb274';
