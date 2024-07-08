@@ -23,7 +23,6 @@ echo "timestamp=" . $timestamp . PHP_EOL;
 
 //generate parameter $balanceInquiryReq
 $balanceInquiryReq = array(
-    'partnerReferenceNo' => "T_" . time(),
     'accountNo' => '21220030202403071031',
     'balanceTypes' => ['BALANCE']
 );
