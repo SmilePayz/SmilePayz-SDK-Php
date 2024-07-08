@@ -26,13 +26,13 @@ const MERCHANT_SECRET = "c14befbb5976d969a91db06439d7e0f964f1a92c0d5417f5cc0a64a
  * SANDBOX URL.
  * From docs API
  */
-const BASE_SANDBOX_URL = "https://sandbox-gateway.thesmilepay.com";
+const BASE_SANDBOX_URL = "https://sandbox-gateway.smilepayz.com";
 
 /**
  * PRODUCTION URL. From docs API. <br>
  * If you pass the sandbox docking, you can switch the URL to production.
  */
-const BASE_URL = "https://sandbox-gateway.thesmilepay.com";
+const BASE_URL = "https://sandbox-gateway.smilepayz.com";
 
 /**
  * AccessToken_API.

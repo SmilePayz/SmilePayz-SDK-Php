@@ -4,8 +4,16 @@ include "ConstantV2.php";
 
 
 //url
-$payinPathUrl = "https://gateway-test.smilepayz.com/v2.0/inquiry-status";
-$payinPathTestUrl = "https://sandbox-gateway-test.smilepayz.com/v2.0/inquiry-status";
+//production
+$requestPath = BASE_URL . "/v2.0/inquiry-status";
+$merchantId = MERCHANT_ID;
+$merchantSecret = MERCHANT_SECRET;
+
+//sandbox
+//$requestPath = BASE_URL_SANDBOX . "/v2.0/inquiry-status";
+//$merchantId = MERCHANT_ID_SANDBOX;
+//$merchantSecret = MERCHANT_SECRET_SANDBOX;
+
 
 //get time
 $currentTime = new DateTime('now', new DateTimeZone('UTC'));
@@ -16,7 +24,7 @@ echo "timestamp=" . $timestamp . PHP_EOL;
 
 //generate parameter $inquiryOrderStatusReq
 $inquiryOrderStatusReq = array(
-    'tradeType' => 2,
+    'tradeType' => TRADE_TYPE_PAY_OUT,
     'tradeNo' => '112200182402261848252600',
     'orderNo' => 'D_1708948105016'
 );
@@ -27,12 +35,13 @@ $jsonString = $signUtils->minify($inquiryOrderStatusReq);
 echo "jsonString=" . $jsonString . PHP_EOL;
 
 //build
-$stringToSign =  $timestamp . "|" . MERCHANT_SECRET . "|" . $jsonString;
+$stringToSign =  $timestamp . "|" . $merchantSecret . "|" . $jsonString;
 echo "stringToSign=" . $stringToSign . PHP_EOL;
 
 //********** begin signature ***************
 $signatureValue =  $signUtils->sha256RsaSignature($stringToSign,PRIVATE_KEY);
 echo "signatureValue=" . $signatureValue . PHP_EOL;
+echo "request path=" . $requestPath . PHP_EOL;
 //********** end signature ***************
 
 
@@ -42,7 +51,7 @@ echo "signatureValue=" . $signatureValue . PHP_EOL;
 $ch = curl_init();
 
 // Set cURL options
-curl_setopt($ch, CURLOPT_URL, $payinPathUrl);  // API URL
+curl_setopt($ch, CURLOPT_URL, $requestPath);  // API URL
 curl_setopt($ch, CURLOPT_POST, true);  // POST
 curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonString);  // JSON Data
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -51,7 +60,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',
     'X-TIMESTAMP: ' . $timestamp,
     'X-SIGNATURE: ' . $signatureValue,
-    'X-PARTNER-ID: ' . MERCHANT_ID,
+    'X-PARTNER-ID: ' . $merchantId,
 ));
 
 // Execute the request and get the response

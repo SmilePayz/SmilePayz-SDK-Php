@@ -4,8 +4,16 @@ include "ConstantV2.php";
 
 
 //url
-$payinPathUrl = "https://gateway-test.smilepayz.com/v2.0/transaction/pay-in";
-$payinPathTestUrl = "https://sandbox-gateway-test.smilepayz.com/v2.0/transaction/pay-in";
+//production
+$requestPath = BASE_URL . "/v2.0/transaction/pay-in";
+$merchantId = MERCHANT_ID;
+$merchantSecret = MERCHANT_SECRET;
+
+//sandbox
+//$requestPath = BASE_URL_SANDBOX . "/v2.0/transaction/pay-in";
+//$merchantId = MERCHANT_ID_SANDBOX;
+//$merchantSecret = MERCHANT_SECRET_SANDBOX;
+
 
 //get time
 $currentTime = new DateTime('now', new DateTimeZone('UTC'));
@@ -16,7 +24,7 @@ $signUtils = new Signature();
 echo "timestamp=" . $timestamp . PHP_EOL;
 
 //generate parameter
-$merchantOrderNo = MERCHANT_ID . $signUtils->uuidv4();
+$merchantOrderNo =  str_replace("sandbox-","S",$merchantId). $signUtils->uuidv4();
 $purpose = "Purpose For Transaction from PHP SDK";
 
 //$moneyReq
@@ -27,7 +35,7 @@ $moneyReq = array(
 
 //$merchantReq
 $merchantReq = array(
-    'merchantId' => MERCHANT_ID
+    'merchantId' => $merchantId
 );
 
 
@@ -46,12 +54,13 @@ $jsonString = $signUtils->minify($payinReq);
 echo "jsonString=" . $jsonString . PHP_EOL;
 
 //build
-$stringToSign =  $timestamp . "|" . MERCHANT_SECRET . "|" . $jsonString;
+$stringToSign =  $timestamp . "|" . $merchantSecret . "|" . $jsonString;
 echo "stringToSign=" . $stringToSign . PHP_EOL;
 
 //********** begin signature ***************
 $signatureValue =  $signUtils->sha256RsaSignature($stringToSign,PRIVATE_KEY);
 echo "signatureValue=" . $signatureValue . PHP_EOL;
+echo "request path=" . $requestPath . PHP_EOL;
 //********** end signature ***************
 
 
@@ -61,7 +70,7 @@ echo "signatureValue=" . $signatureValue . PHP_EOL;
 $ch = curl_init();
 
 // Set cURL options
-curl_setopt($ch, CURLOPT_URL, $payinPathUrl);  // API URL
+curl_setopt($ch, CURLOPT_URL, $requestPath);  // API URL
 curl_setopt($ch, CURLOPT_POST, true);  // POST
 curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonString);  // JSON Data
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -70,7 +79,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',
     'X-TIMESTAMP: ' . $timestamp,
     'X-SIGNATURE: ' . $signatureValue,
-    'X-PARTNER-ID: ' . MERCHANT_ID,
+    'X-PARTNER-ID: ' . $merchantId,
 ));
 
 // Execute the request and get the response

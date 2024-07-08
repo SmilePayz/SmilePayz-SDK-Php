@@ -3,9 +3,15 @@ include "ConstantV2.php";
 
 require 'Signature.php';
 
-//url
-$payinPathUrl = BASE_URL . "/v2.0/inquiry-balance";
-$payinPathTestUrl = BASE_URL_SANDBOX . "/v2.0/inquiry-balance";
+//production
+$requestPath = BASE_URL . "/v2.0/inquiry-balance";
+$merchantId = MERCHANT_ID;
+$merchantSecret = MERCHANT_SECRET;
+
+//sandbox
+//$requestPath = BASE_URL_SANDBOX . "/v2.0/inquiry-balance";
+//$merchantId = MERCHANT_ID_SANDBOX;
+//$merchantSecret = MERCHANT_SECRET_SANDBOX;
 
 //get time
 $currentTime = new DateTime('now', new DateTimeZone('UTC'));
@@ -19,7 +25,7 @@ echo "timestamp=" . $timestamp . PHP_EOL;
 $balanceInquiryReq = array(
     'partnerReferenceNo' => "T_" . time(),
     'accountNo' => '21220030202403071031',
-    'balanceTypes' => ['balance']
+    'balanceTypes' => ['BALANCE']
 );
 $signUtils = new Signature();
 
@@ -28,7 +34,7 @@ $jsonString = $signUtils->minify($balanceInquiryReq);
 echo "jsonString=" . $jsonString . PHP_EOL;
 
 //build
-$stringToSign = $timestamp . "|" . MERCHANT_SECRET . "|" . $jsonString;
+$stringToSign = $timestamp . "|" . $merchantSecret . "|" . $jsonString;
 echo "stringToSign=" . $stringToSign . PHP_EOL;
 
 //********** begin signature ***************
@@ -43,7 +49,7 @@ echo "signatureValue=" . $signatureValue . PHP_EOL;
 $ch = curl_init();
 
 // Set cURL options
-curl_setopt($ch, CURLOPT_URL, $payinPathUrl);  // API URL
+curl_setopt($ch, CURLOPT_URL, $requestPath);  // API URL
 curl_setopt($ch, CURLOPT_POST, true);  // POST
 curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonString);  // JSON Data
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -52,9 +58,9 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Content-Type: application/json',
     'X-TIMESTAMP: ' . $timestamp,
     'X-SIGNATURE: ' . $signatureValue,
-    'X-PARTNER-ID: ' . MERCHANT_ID,
+    'X-PARTNER-ID: ' . $merchantId,
 ));
-echo "request path =" . $payinPathUrl;
+echo "request path =" . $requestPath;
 
 // Execute the request and get the response
 $response = curl_exec($ch);
